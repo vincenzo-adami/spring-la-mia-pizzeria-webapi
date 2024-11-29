@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments :: head}"></div>
+    <title>Pizzeria</title>
+  </head>
+  <body>
+    <header th:replace="~{fragments :: header}"></header>
+
+    <div class="container py-3">
+      <div class="row">
+        <div th:if="${successMsg != null}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <span th:text="${successMsg}"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+        <div th:if="${updateMsg != null}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <span th:text="${updateMsg}"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+        <div th:if="${deleteMsg != null}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <span th:text="${deleteMsg}"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+        <div class="col-12">
+          <form th:action="@{/pizzas}" method="get">
+            <div class="input-group">
+              <input
+                name="keyword"
+                th:value="${keyword}"
+                class="form-control"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+
+              <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-12">
+          <table
+            th:if="${!pizzas.isEmpty()}"
+            class="table table-sm table-striped align-middle"
+          >
+            <thead>
+              <th class="w-25"></th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <tr th:each="pizza : ${pizzas}">
+                <td>
+                  <img
+                    class="w-50"
+                    th:src="@{${pizza.photoUrl}}"
+                    th:alt="${pizza.name}"
+                  />
+                </td>
+                <td th:text="${pizza.name}"></td>
+                <td th:text="${pizza.description}"></td>
+                <td
+                  th:text="|€${#numbers.formatDecimal(pizza.price, 0, 2, 'COMMA')}|"
+                ></td>
+                <td>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a
+                            class="btn btn-primary"
+                            th:href="@{|pizzas/show/${pizza.id}?keyword=${keyword}|}"
+                          >
+                            <i class="fa fa-info"></i>
+                          </a>
+                        </td>
+                        <td sec:authorize="hasAuthority('ADMIN')">
+                          <a
+                            class="btn btn-primary"
+                            th:href="@{|pizzas/edit/${pizza.id}|}"
+                          >
+                            <i class="fa fa-edit"></i>
+                          </a>
+                        </td>
+                        <td sec:authorize="hasAuthority('ADMIN')">
+                          <form
+                            action="#"
+                            th:action="@{|pizzas/delete/${pizza.id}|}"
+                            method="post"
+                          >
+                            <button
+                              class="btn btn-danger"
+                              type="submit"
+                              id="submitButton"
+                              onclick="return confirm('Are you sure?')"
+                            >
+                              <i class="fa fa-trash-alt"></i>
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            class="alert alert-warning"
+            role="alert"
+            th:if="${pizzas.isEmpty()}"
+          >
+            There are no pizza in the database
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div th:replace="~{fragments :: bsScript}"></div>
+  </body>
+</html>

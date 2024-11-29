@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments :: head}"></div>
+    <title>Update a pizza</title>
+  </head>
+  <body>
+    <header th:replace="~{fragments :: header}"></header>
+
+    <div class="container">
+      <h1 class="my-3">Update a pizza</h1>
+      <form
+        class="row g-3"
+        id="pizza-form"
+        th:object="${pizza}"
+        th:action="@{/pizzas/edit/{id} (id=${pizza.id})}"
+        method="post"
+      >
+        <div class="col-md-4">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            th:errorClass="is-invalid"
+            th:field="*{name}"
+          />
+          <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback">
+            <ul>
+              <li
+                th:each="err : ${#fields.errors('name')}"
+                th:text="${err}"
+              ></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="photoUrl" class="form-label">Photo Url</label>
+          <input
+            type="text"
+            class="form-control"
+            id="photoUrl"
+            placeholder="dir/photo.png"
+            th:errorClass="is-invalid"
+            th:field="*{photoUrl}"
+          />
+          <div
+            th:if="${#fields.hasErrors('photoUrl')}"
+            class="invalid-feedback"
+          >
+            <ul>
+              <li
+                th:each="err : ${#fields.errors('photoUrl')}"
+                th:text="${err}"
+              ></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="price" class="form-label">Price</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="price"
+            placeholder="7.50"
+            th:errorClass="is-invalid"
+            th:field="*{price}"
+          />
+          <div th:if="${#fields.hasErrors('price')}" class="invalid-feedback">
+            <ul>
+              <li
+                th:each="err : ${#fields.errors('price')}"
+                th:text="${err}"
+              ></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12">
+          <h5>Ingredients</h5>
+          <div
+            class="form-check form-check-inline"
+            th:each="ingredient : ${allIngredients}"
+          >
+            <input
+              type="checkbox"
+              class="form-check-input"
+              th:id="|ingredient_${ingredient.id}|"
+              th:value="${ingredient.id}"
+              th:field="*{ingredients}"
+            />
+            <label
+              th:for="|ingredient_${ingredient.id}|"
+              class="form-check-label"
+              th:text="${ingredient.name}"
+            ></label>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="description"
+            th:field="*{description}"
+            rows="3"
+            th:errorClass="is-invalid"
+          ></textarea>
+          <div
+            th:if="${#fields.hasErrors('description')}"
+            class="invalid-feedback"
+          >
+            <ul>
+              <li
+                th:each="err : ${#fields.errors('description')}"
+                th:text="${err}"
+              ></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success">
+            Update <i class="fas fa-plus-square"></i>
+          </button>
+          <a th:href="@{'/pizzas'}" class="btn btn-danger">
+            Cancel <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div th:replace="~{fragments :: bsScript}"></div>
+  </body>
+</html>

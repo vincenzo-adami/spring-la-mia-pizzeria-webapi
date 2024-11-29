@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments :: head}"></div>
+    <title>Update a Ingredient</title>
+  </head>
+  <body>
+    <header th:replace="~{fragments :: header}"></header>
+
+    <div class="container">
+      <h1 class="my-3">Update a Ingredient</h1>
+      <form
+        class="row g-3"
+        id="ingredient-form"
+        th:object="${ingredient}"
+        th:action="@{/ingredients/edit/{id} (id=*{id})}"
+        method="post"
+      >
+        <div class="col-md-12">
+          <label for="title" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            th:errorClass="is-invalid"
+            th:field="*{name}"
+          />
+          <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback">
+            <ul>
+              <li
+                th:each="err : ${#fields.errors('name')}"
+                th:text="${err}"
+              ></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success">
+            Update <i class="fas fa-plus-square"></i>
+          </button>
+          <a th:href="@{/ingredients}" class="btn btn-danger">
+            Cancel <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div th:replace="~{fragments :: bsScript}"></div>
+  </body>
+</html>

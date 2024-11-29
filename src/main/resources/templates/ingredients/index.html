@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments :: head}"></div>
+    <title>Ingredients</title>
+  </head>
+  <body>
+    <header th:replace="~{fragments :: header}"></header>
+
+    <div class="container py-3">
+      <h1 class="pb-3">Ingredients</h1>
+      <div class="row pb-3">
+        <div th:if="${successMsg != null}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <span th:text="${successMsg}"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+        <div th:if="${updateMsg != null}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <span th:text="${updateMsg}"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+        <div th:if="${deleteMsg != null}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <span th:text="${deleteMsg}"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <form th:action="@{/ingredients}" method="get">
+            <div class="input-group">
+              <input
+                name="keyword"
+                th:value="${keyword}"
+                class="form-control"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-6">
+          <form
+            th:action="@{/ingredients/store}"
+            method="post"
+            id="ingredient-form"
+            th:object="${ingredient}"
+          >
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                id="ingredient_id"
+                th:field="*{name}"
+                th:errorClass="is-invalid"
+                placeholder="Ingredient name"
+                aria-placeholder="Ingredient name"
+              />
+              <button class="btn btn-success" type="submit">
+                Add <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="row justify-content-center pt-3">
+          <div class="col-8">
+            <table
+              th:if="${!ingredients.isEmpty()}"
+              class="table table-sm align-middle"
+            >
+              <thead>
+                <th>Name</th>
+                <th></th>
+              </thead>
+              <tbody>
+                <tr th:each="ingredient : ${ingredients}">
+                  <td th:text="${ingredient.name}"></td>
+                  <td>
+                    <table class="ms-auto">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a
+                              class="btn btn-primary"
+                              th:href="@{|ingredients/edit/${ingredient.id}|}"
+                            >
+                              <i class="fa fa-edit"></i>
+                            </a>
+                          </td>
+                          <td>
+                            <form
+                              action="#"
+                              th:action="@{|ingredients/delete/${ingredient.id}|}"
+                              method="post"
+                            >
+                              <button
+                                class="btn btn-danger"
+                                type="submit"
+                                id="submitButton"
+                                onclick="return confirm('Are you sure?')"
+                              >
+                                <i class="fa fa-trash-alt"></i>
+                              </button>
+                            </form>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div
+              class="alert alert-warning"
+              role="alert"
+              th:if="${ingredients.isEmpty()}"
+            >
+              There are no ingredients in the database
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div th:replace="~{fragments :: bsScript}"></div>
+  </body>
+</html>
