@@ -36,7 +36,7 @@ public class SpecialOffersController {
     Long pizzaID = specialOffersForm.getPizza().getId();
 
     if (bindingResult.hasErrors()) {
-      return "/pizzas/{" + pizzaID + "}/specialOffers";
+      return "specialOffers/create";
     }
 
     specialOfferRepository.save(specialOffersForm);
