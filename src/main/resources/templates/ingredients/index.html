@@ -90,6 +90,14 @@
               <button class="btn btn-success" type="submit">
                 Add <i class="fa fa-plus"></i>
               </button>
+              <div th:if="${#fields.hasAnyErrors()}" class="invalid-feedback">
+                <ul>
+                  <li
+                    th:each="err : ${#fields.allErrors()}"
+                    th:text="${err}"
+                  ></li>
+                </ul>
+              </div>
             </div>
           </form>
         </div>

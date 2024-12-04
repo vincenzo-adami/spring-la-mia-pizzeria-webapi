@@ -19,7 +19,7 @@ public class Ingredient {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank(message = "Title cannot be null")
+  @NotBlank(message = "Ingredient name cannot be null")
   @Column(unique = true)
   private String name;
 

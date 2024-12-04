@@ -6,10 +6,13 @@ import java.util.Optional;
 import org.lessons.pizzeria.model.Ingredient;
 import org.lessons.pizzeria.model.Pizza;
 import org.lessons.pizzeria.repository.IngredientRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,6 +52,12 @@ public class IngredientsController {
   public String store(@Valid @ModelAttribute Ingredient ingredient, BindingResult bindingResult, Model model,
       @RequestParam(name = "keyword", required = false) String keyword, RedirectAttributes redirectAttributes) {
 
+    if (ingredientRepo.findByName(ingredient.getName()).isPresent()) {
+      // bindingResult.addError(new ObjectError("unique", "This ingredient already
+      // exists"));
+      bindingResult.addError(new FieldError("unique", "name", "This ingredient already exists"));
+    }
+
     if (bindingResult.hasErrors()) {
       List<Ingredient> allIngredients;
 
@@ -59,7 +68,7 @@ public class IngredientsController {
         allIngredients = ingredientRepo.findAll();
       }
 
-      model.addAttribute("ingredient", new Ingredient());
+      model.addAttribute("ingredient", ingredient);
       model.addAttribute("ingredients", allIngredients);
 
       return "ingredients/index";
